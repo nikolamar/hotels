@@ -14,10 +14,11 @@ import * as gStyles from "../global-styles";
 import moment from "moment";
 import Review from "./review";
 import Rating from "./rating";
+import { produce } from "immer";
 
 const HotelEdit = ({ item, reviews, loadingHotelDetails }) => {
 
-  const [edit, setEdit] = useState(item);
+  const [edit, setEdit] = useState(produce(item, draft => {}));
 
   const history = useHistory();
 
