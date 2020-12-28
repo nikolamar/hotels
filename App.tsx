@@ -1,21 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Provider } from 'react-redux';
+import { StatusBar } from 'expo-status-bar';
+import { Platform } from 'react-native';
+import { createBrowserHistory, createMemoryHistory } from 'history'
+import Hotels from './src/containers/hotels';
+import Favorites from './src/containers/favorites';
+import Hotel from './src/containers/hotel';
+import NotFound from "./src/components/not-found";
+import AppBar from './src/containers/app-bar';
+import { Router, Route, Switch } from "./src/router";
+import PrivateRoute from './src/containers/private-route';
+import SignIn from './src/containers/signin';
+import SignUp from './src/containers/signup';
+import { store, persistor } from './src/store';
+import { PersistGate } from "redux-persist/integration/react";
+import config from "./src/config";
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_700Bold,
+  Roboto_900Black,
+} from '@expo-google-fonts/roboto';
 
-export default function App() {
+export let history;
+
+const isWeb = Platform.OS === "web";
+
+if (isWeb) {
+  history = createBrowserHistory();
+} else {
+  history = createMemoryHistory();
+}
+
+const App = () => {
+  let [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_700Bold,
+    Roboto_900Black,
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <Router history={history}>
+          <AppBar height={config.appBarHeight} />
+          <Switch>
+            <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/signup" component={SignUp} />
+            <PrivateRoute exact path="/hotels" component={Hotels} />
+            <PrivateRoute exact path="/favorites" component={Favorites} />
+            <PrivateRoute exact path="/hotel/:id" component={Hotel} />
+            <PrivateRoute exact path={["/hotel/:id", "/hotel/:id/edit"]} component={Hotel} />
+            <NotFound/>
+          </Switch>
+        </Router>
+      </PersistGate>
       <StatusBar style="auto" />
-    </View>
+    </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
