@@ -49,7 +49,6 @@ const App = () => {
             <Route exact path="/signup" component={SignUp} />
             <PrivateRoute exact path="/hotels" component={Hotels} />
             <PrivateRoute exact path="/favorites" component={Favorites} />
-            <PrivateRoute exact path="/hotel/:id" component={Hotel} />
             <PrivateRoute exact path={["/hotel/:id", "/hotel/:id/edit"]} component={Hotel} />
             <PrivateRoute component={NotFound} />
           </Switch>
