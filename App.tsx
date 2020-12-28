@@ -51,7 +51,7 @@ const App = () => {
             <PrivateRoute exact path="/favorites" component={Favorites} />
             <PrivateRoute exact path="/hotel/:id" component={Hotel} />
             <PrivateRoute exact path={["/hotel/:id", "/hotel/:id/edit"]} component={Hotel} />
-            <NotFound/>
+            <PrivateRoute component={NotFound} />
           </Switch>
         </Router>
       </PersistGate>
